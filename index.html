@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Old Are U?</title>
+    <link rel="icon" type="image/png" href="Icon.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        input[type="number"] {
+            width: 50px;
+        }
+        #result, #nextBirthday {
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        #calculateButton {
+            margin-top: 20px;
+        }
+        #nextBirthday ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        #nextBirthday li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>How Old Are U?</h1>
+    <div id="inputFields">
+        <label for="year">Year:</label>
+        <input type="number" id="year" min="1900" max="2100" value="2009">
+        <label for="month">Month:</label>
+        <select id="month">
+            <option value="1">January</option>
+            <option value="2" selected>February</option>
+            <option value="3">March</option>
+            <option value="4">April</option>
+            <option value="5">May</option>
+            <option value="6">June</option>
+            <option value="7">July</option>
+            <option value="8">August</option>
+            <option value="9">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+        </select>
+        <label for="day">Day:</label>
+        <input type="number" id="day" min="1" max="31" value="6">
+        <label for="hour">Hour:</label>
+        <input type="number" id="hour" min="0" max="23" value="22">
+        <label for="minute">Minute:</label>
+        <input type="number" id="minute" min="0" max="59" value="38">
+        <button id="calculateButton" onclick="calculateTime()">Calculate</button>
+    </div>
+    <div id="result"></div>
+    <h2 id="birthdayTitle" style="display:none;">How Long Until Your Next Birthday?</h2>
+    <div id="nextBirthday"></div>
+
+    <script>
+        function calculateTime() {
+            document.getElementById('inputFields').style.display = 'none';
+            document.getElementById('calculateButton').style.display = 'none';
+
+            const birthDate = new Date(
+                document.getElementById('year').value,
+                document.getElementById('month').value - 1,
+                document.getElementById('day').value,
+                document.getElementById('hour').value,
+                document.getElementById('minute').value
+            );
+
+            const units = {
+                Century: 3155695200, 
+                Decade: 315569520,   
+                Year: 31556952,
+                Month: 2629746,
+                Fortnight: 1209600,
+                Week: 604800,
+                Day: 86400,
+                Hour: 3600,
+                Minute: 60,
+                second: 1,
+                Millisecond: 0.001
+            };
+
+            setInterval(() => {
+                const now = new Date();
+                const difference = (now - birthDate) / 1000;
+
+                let result = '';
+                for (const [unit, divisor] of Object.entries(units)) {
+                    const value = difference / divisor;
+                    if (unit === 'century' || unit === 'decade') {
+                        result += `You Are ${value.toFixed(3)} ${unit}s Old<br>`;
+                    } else {
+                        result += `You Are ${value.toFixed(3)} ${unit}s Old<br>`;
+                    }
+                }
+
+                document.getElementById('result').innerHTML = result;
+
+                const nextBirthday = new Date(now.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+                if (nextBirthday < now) {
+                    nextBirthday.setFullYear(nextBirthday.getFullYear() + 1);
+                }
+
+                const timeUntilNextBirthday = (nextBirthday - now) / 1000;
+
+                const yearsUntilNextBirthday = timeUntilNextBirthday / units.year;
+                const monthsUntilNextBirthday = timeUntilNextBirthday / units.month;
+                const fortnightsUntilNextBirthday = timeUntilNextBirthday / units.fortnight;
+                const weeksUntilNextBirthday = timeUntilNextBirthday / units.week;
+                const daysUntilNextBirthday = timeUntilNextBirthday / units.day;
+                const hoursUntilNextBirthday = timeUntilNextBirthday / units.hour;
+                const minutesUntilNextBirthday = timeUntilNextBirthday / units.minute;
+                const secondsUntilNextBirthday = timeUntilNextBirthday / units.second;
+                const millisecondsUntilNextBirthday = timeUntilNextBirthday / units.millisecond;
+
+                const nextBirthdayMessage = `
+                    <ul>
+                        <li>${yearsUntilNextBirthday.toFixed(3)} Years Until Your Next Birthday</li>
+                        <li>${monthsUntilNextBirthday.toFixed(3)} Months Until Your Next Birthday</li>
+                        <li>${fortnightsUntilNextBirthday.toFixed(3)} Fortnights Until Your Next Birthday</li>
+                        <li>${weeksUntilNextBirthday.toFixed(3)} Weeks Until Your Next Birthday</li>
+                        <li>${daysUntilNextBirthday.toFixed(3)} Days Until Your Next Birthday</li>
+                        <li>${hoursUntilNextBirthday.toFixed(3)} Hours Until Your Next Birthday</li>
+                        <li>${minutesUntilNextBirthday.toFixed(3)} Minutes Until Your Next Birthday</li>
+                        <li>${secondsUntilNextBirthday.toFixed(3)} Seconds Until Your Next Birthday</li>
+                        <li>${millisecondsUntilNextBirthday.toFixed(3)} Milliseconds Until Your Next Birthday</li>
+                    </ul>
+                `;
+
+                document.getElementById('nextBirthday').innerHTML = nextBirthdayMessage;
+                document.getElementById('birthdayTitle').style.display = 'block';
+            }, 4);
+        }
+    </script>
+</body>
+</html>
