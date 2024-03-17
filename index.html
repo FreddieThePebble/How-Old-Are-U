@@ -84,7 +84,7 @@
                 Day: 86400,
                 Hour: 3600,
                 Minute: 60,
-                second: 1,
+                Second: 1,
                 Millisecond: 0.001
             };
 
@@ -111,15 +111,15 @@
 
                 const timeUntilNextBirthday = (nextBirthday - now) / 1000;
 
-                const yearsUntilNextBirthday = timeUntilNextBirthday / units.year;
-                const monthsUntilNextBirthday = timeUntilNextBirthday / units.month;
-                const fortnightsUntilNextBirthday = timeUntilNextBirthday / units.fortnight;
-                const weeksUntilNextBirthday = timeUntilNextBirthday / units.week;
-                const daysUntilNextBirthday = timeUntilNextBirthday / units.day;
-                const hoursUntilNextBirthday = timeUntilNextBirthday / units.hour;
-                const minutesUntilNextBirthday = timeUntilNextBirthday / units.minute;
-                const secondsUntilNextBirthday = timeUntilNextBirthday / units.second;
-                const millisecondsUntilNextBirthday = timeUntilNextBirthday / units.millisecond;
+                const yearsUntilNextBirthday = timeUntilNextBirthday / units.Year;
+                const monthsUntilNextBirthday = timeUntilNextBirthday / units.Month;
+                const fortnightsUntilNextBirthday = timeUntilNextBirthday / units.Fortnight;
+                const weeksUntilNextBirthday = timeUntilNextBirthday / units.Week;
+                const daysUntilNextBirthday = timeUntilNextBirthday / units.Day;
+                const hoursUntilNextBirthday = timeUntilNextBirthday / units.Hour;
+                const minutesUntilNextBirthday = timeUntilNextBirthday / units.Minute;
+                const secondsUntilNextBirthday = timeUntilNextBirthday / units.Second;
+                const millisecondsUntilNextBirthday = timeUntilNextBirthday / units.Millisecond;
 
                 const nextBirthdayMessage = `
                     <ul>
