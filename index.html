@@ -9,21 +9,89 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
         }
-        input[type="number"] {
-            width: 50px;
+
+        h1, h2 {
+            color: #ffcc00;
         }
+
+        #inputFields {
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.4);
+            width: 300px;
+            margin: auto;
+        }
+
+        .input-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+
+        label {
+            width: 80px;
+            text-align: right;
+            font-weight: bold;
+        }
+
+        input, select {
+            background: #2b2b2b;
+            color: #ffffff;
+            border: 1px solid #ffcc00;
+            padding: 6px;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+            width: 140px;
+            text-align: center;
+        }
+
+        #calculateButton {
+            margin-top: 12px;
+            background: #ffcc00;
+            color: #000;
+            font-weight: bold;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 100%;
+            transition: 0.3s;
+        }
+
+        #calculateButton:hover {
+            background: #ffaa00;
+            box-shadow: 0 0 8px #ffcc00;
+        }
+
         #result, #nextBirthday {
             font-size: 16px;
-            margin-top: 20px;
+            margin-top: 15px;
+            padding: 15px;
+            background: #1e1e1e;
+            border-radius: 10px;
+            box-shadow: 0 0 12px rgba(255, 204, 0, 0.3);
+            display: inline-block;
+            max-width: 80%;
         }
-        #calculateButton {
-            margin-top: 20px;
-        }
+
         #nextBirthday ul {
             list-style-type: none;
             padding: 0;
         }
+
         #nextBirthday li {
             margin-bottom: 5px;
         }
@@ -32,29 +100,39 @@
 <body>
     <h1>How Old Are U?</h1>
     <div id="inputFields">
-        <label for="year">Year:</label>
-        <input type="number" id="year" min="1900" max="2100" value="2009">
-        <label for="month">Month:</label>
-        <select id="month">
-            <option value="1">January</option>
-            <option value="2" selected>February</option>
-            <option value="3">March</option>
-            <option value="4">April</option>
-            <option value="5">May</option>
-            <option value="6">June</option>
-            <option value="7">July</option>
-            <option value="8">August</option>
-            <option value="9">September</option>
-            <option value="10">October</option>
-            <option value="11">November</option>
-            <option value="12">December</option>
-        </select>
-        <label for="day">Day:</label>
-        <input type="number" id="day" min="1" max="31" value="6">
-        <label for="hour">Hour:</label>
-        <input type="number" id="hour" min="0" max="23" value="22">
-        <label for="minute">Minute:</label>
-        <input type="number" id="minute" min="0" max="59" value="38">
+        <div class="input-group">
+            <label for="year">Year:</label>
+            <input type="number" id="year" min="1900" max="2100" value="2009">
+        </div>
+        <div class="input-group">
+            <label for="month">Month:</label>
+            <select id="month">
+                <option value="1">January</option>
+                <option value="2" selected>February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="day">Day:</label>
+            <input type="number" id="day" min="1" max="31" value="6">
+        </div>
+        <div class="input-group">
+            <label for="hour">Hour:</label>
+            <input type="number" id="hour" min="0" max="23" value="22">
+        </div>
+        <div class="input-group">
+            <label for="minute">Minute:</label>
+            <input type="number" id="minute" min="0" max="59" value="38">
+        </div>
         <button id="calculateButton" onclick="calculateTime()">Calculate</button>
     </div>
     <div id="result"></div>
@@ -95,11 +173,7 @@
                 let result = '';
                 for (const [unit, divisor] of Object.entries(units)) {
                     const value = difference / divisor;
-                    if (unit === 'century' || unit === 'decade') {
-                        result += `You Are ${value.toFixed(3)} ${unit}s Old<br>`;
-                    } else {
-                        result += `You Are ${value.toFixed(3)} ${unit}s Old<br>`;
-                    }
+                    result += `You Are ${value.toFixed(3)} ${unit}s Old<br>`;
                 }
 
                 document.getElementById('result').innerHTML = result;
@@ -111,27 +185,17 @@
 
                 const timeUntilNextBirthday = (nextBirthday - now) / 1000;
 
-                const yearsUntilNextBirthday = timeUntilNextBirthday / units.Year;
-                const monthsUntilNextBirthday = timeUntilNextBirthday / units.Month;
-                const fortnightsUntilNextBirthday = timeUntilNextBirthday / units.Fortnight;
-                const weeksUntilNextBirthday = timeUntilNextBirthday / units.Week;
-                const daysUntilNextBirthday = timeUntilNextBirthday / units.Day;
-                const hoursUntilNextBirthday = timeUntilNextBirthday / units.Hour;
-                const minutesUntilNextBirthday = timeUntilNextBirthday / units.Minute;
-                const secondsUntilNextBirthday = timeUntilNextBirthday / units.Second;
-                const millisecondsUntilNextBirthday = timeUntilNextBirthday / units.Millisecond;
-
                 const nextBirthdayMessage = `
                     <ul>
-                        <li>${yearsUntilNextBirthday.toFixed(3)} Years Until Your Next Birthday</li>
-                        <li>${monthsUntilNextBirthday.toFixed(3)} Months Until Your Next Birthday</li>
-                        <li>${fortnightsUntilNextBirthday.toFixed(3)} Fortnights Until Your Next Birthday</li>
-                        <li>${weeksUntilNextBirthday.toFixed(3)} Weeks Until Your Next Birthday</li>
-                        <li>${daysUntilNextBirthday.toFixed(3)} Days Until Your Next Birthday</li>
-                        <li>${hoursUntilNextBirthday.toFixed(3)} Hours Until Your Next Birthday</li>
-                        <li>${minutesUntilNextBirthday.toFixed(3)} Minutes Until Your Next Birthday</li>
-                        <li>${secondsUntilNextBirthday.toFixed(3)} Seconds Until Your Next Birthday</li>
-                        <li>${millisecondsUntilNextBirthday.toFixed(3)} Milliseconds Until Your Next Birthday</li>
+                        <li>${(timeUntilNextBirthday / units.Year).toFixed(3)} Years Until Your Next Birthday</li>
+                        <li>${(timeUntilNextBirthday / units.Month).toFixed(3)} Months Until Your Next Birthday</li>
+                        <li>${(timeUntilNextBirthday / units.Fortnight).toFixed(3)} Fortnights Until Your Next Birthday</li>
+                        <li>${(timeUntilNextBirthday / units.Week).toFixed(3)} Weeks Until Your Next Birthday</li>
+                        <li>${(timeUntilNextBirthday / units.Day).toFixed(3)} Days Until Your Next Birthday</li>
+                        <li>${(timeUntilNextBirthday / units.Hour).toFixed(3)} Hours Until Your Next Birthday</li>
+                        <li>${(timeUntilNextBirthday / units.Minute).toFixed(3)} Minutes Until Your Next Birthday</li>
+                        <li>${(timeUntilNextBirthday / units.Second).toFixed(3)} Seconds Until Your Next Birthday</li>
+                        <li>${(timeUntilNextBirthday / units.Millisecond).toFixed(3)} Milliseconds Until Your Next Birthday</li>
                     </ul>
                 `;
 
