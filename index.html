@@ -13,6 +13,9 @@
             color: #ffffff;
             margin: 0;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         h1, h2 {
@@ -76,7 +79,7 @@
             box-shadow: 0 0 8px #ffcc00;
         }
 
-        #result, #nextBirthday {
+        #result, #nextBirthday, #funStats {
             font-size: 16px;
             margin-top: 15px;
             padding: 15px;
@@ -87,13 +90,45 @@
             max-width: 80%;
         }
 
-        #nextBirthday ul {
+        #nextBirthday ul, #funStats ul {
             list-style-type: none;
             padding: 0;
         }
 
-        #nextBirthday li {
+        #nextBirthday li, #funStats li {
             margin-bottom: 5px;
+        }
+
+        footer {
+            background-color: #1e1e1e;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 -2px 10px rgba(255, 204, 0, 0.3);
+            display: none;
+            margin-top: 20px;
+        }
+
+        footer ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        footer ul li {
+            display: inline;
+        }
+
+        footer ul li img {
+            width: 30px;
+            height: 30px;
+            transition: 0.3s;
+        }
+
+        footer ul li img:hover {
+            transform: scale(1.2);
         }
     </style>
 </head>
@@ -138,8 +173,23 @@
     <div id="result"></div>
     <h2 id="birthdayTitle" style="display:none;">How Long Until Your Next Birthday?</h2>
     <div id="nextBirthday"></div>
+    <h2 id="funStatsTitle" style="display:none;">Fun Stats That May or May Not Be Correct</h2>
+    <div id="funStats"></div>
+
+    <footer id="footer">
+        <ul>
+            <li><a href="https://bit.ly/PebbleGames" target="_blank"><img src="https://raw.githubusercontent.com/FreddieThePebble/UI/refs/heads/main/icons/house.png" alt="House Icon"></a></li>
+            <li><a href="https://github.com/FreddieThePebble/How-Old-Are-U" target="_blank"><img src="https://raw.githubusercontent.com/FreddieThePebble/UI/refs/heads/main/icons/code.png" alt="Code Icon"></a></li>
+            <li><a href="#" onclick="copyToClipboard()"><img src="https://raw.githubusercontent.com/FreddieThePebble/UI/refs/heads/main/icons/link.png" alt="Link Icon"></a></li>
+            <li><img id="pauseButton" src="https://raw.githubusercontent.com/FreddieThePebble/UI/refs/heads/main/icons/pause-red.png" alt="Pause Icon" onclick="togglePause()"></li>
+            <li><img src="https://raw.githubusercontent.com/FreddieThePebble/UI/refs/heads/main/icons/export.png" alt="Export Icon" onclick="exportData()"></li>
+        </ul>
+    </footer>
 
     <script>
+        let paused = false;
+        let intervalId;
+
         function calculateTime() {
             document.getElementById('inputFields').style.display = 'none';
             document.getElementById('calculateButton').style.display = 'none';
@@ -166,7 +216,9 @@
                 Millisecond: 0.001
             };
 
-            setInterval(() => {
+            intervalId = setInterval(() => {
+                if (paused) return;
+
                 const now = new Date();
                 const difference = (now - birthDate) / 1000;
 
@@ -201,7 +253,110 @@
 
                 document.getElementById('nextBirthday').innerHTML = nextBirthdayMessage;
                 document.getElementById('birthdayTitle').style.display = 'block';
-            }, 4);
+
+                // Fun Stats Calculation
+                const secondsInYear = units.Year;
+                const secondsInDay = units.Day;
+                const hoursInDay = 24;
+                const sleepHours = 8;
+                
+                const ageInSeconds = difference;
+                const awakeSeconds = ageInSeconds - (sleepHours * secondsInDay * (ageInSeconds / secondsInDay));
+
+                const heartRate = 80; // bpm
+                const breathRate = 12; // breaths per minute
+                const blinkRate = 930; // blinks per hour
+
+                const heartBeats = heartRate * ageInSeconds / 60;
+                const breaths = breathRate * ageInSeconds / 60;
+                const blinks = blinkRate * ageInSeconds / 3600;
+
+                const funStats = `
+                    <ul>
+                        <li>The average heart rate is 80bpm so your heart has beat ${heartBeats.toFixed(0)} times</li>
+                        <li>The average human breathes every 5 seconds so you have breathed ${breaths.toFixed(0)} times</li>
+                        <li>The average person blinks 930 times an hour so you have blinked ${blinks.toFixed(0)} times</li>
+                    </ul>
+                `;
+
+                document.getElementById('funStats').innerHTML = funStats;
+                document.getElementById('funStatsTitle').style.display = 'block';
+
+                document.getElementById('footer').style.display = 'block';
+            }, 100);
+        }
+
+        function togglePause() {
+            paused = !paused;
+            document.getElementById('pauseButton').src = paused ? "https://raw.githubusercontent.com/FreddieThePebble/UI/refs/heads/main/icons/play.png" : "https://raw.githubusercontent.com/FreddieThePebble/UI/refs/heads/main/icons/pause-red.png";
+        }
+
+        function copyToClipboard() {
+            const text = "https://freddiethepebble.github.io/How-Old-Are-U/";
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Link copied to clipboard: " + text);
+            });
+        }
+
+        function exportData() {
+            const birthDate = new Date(
+                document.getElementById('year').value,
+                document.getElementById('month').value - 1,
+                document.getElementById('day').value,
+                document.getElementById('hour').value,
+                document.getElementById('minute').value
+            );
+            const now = new Date();
+            const ageInSeconds = (now - birthDate) / 1000;
+
+            const units = {
+                Century: 3155695200,
+                Decade: 315569520,
+                Year: 31556952,
+                Month: 2629746,
+                Fortnight: 1209600,
+                Week: 604800,
+                Day: 86400,
+                Hour: 3600,
+                Minute: 60,
+                Second: 1,
+                Millisecond: 0.001
+            };
+
+            const fileContent = `How Old Are U?
+
+Born: ${birthDate.getMonth() + 1}/${birthDate.getDate()}/${birthDate.getFullYear()} at ${birthDate.getHours()}:${birthDate.getMinutes()}
+Calculated on ${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()} at ${now.getHours()}:${now.getMinutes()}
+
+You Are ${(ageInSeconds / units.Century).toFixed(3)} Centurys Old
+You Are ${(ageInSeconds / units.Decade).toFixed(3)} Decades Old
+You Are ${(ageInSeconds / units.Year).toFixed(3)} Years Old
+You Are ${(ageInSeconds / units.Month).toFixed(3)} Months Old
+You Are ${(ageInSeconds / units.Fortnight).toFixed(3)} Fortnights Old
+You Are ${(ageInSeconds / units.Week).toFixed(3)} Weeks Old
+You Are ${(ageInSeconds / units.Day).toFixed(3)} Days Old
+You Are ${(ageInSeconds / units.Hour).toFixed(3)} Hours Old
+You Are ${(ageInSeconds / units.Minute).toFixed(3)} Minutes Old
+You Are ${(ageInSeconds / units.Second).toFixed(3)} Seconds Old
+You Are ${(ageInSeconds / units.Millisecond).toFixed(3)} Milliseconds Old
+
+There Are ${(ageInSeconds / units.Year).toFixed(3)} Years Until Your Next Birthday
+There Are ${(ageInSeconds / units.Month).toFixed(3)} Months Until Your Next Birthday
+There Are ${(ageInSeconds / units.Fortnight).toFixed(3)} Fortnights Until Your Next Birthday
+There Are ${(ageInSeconds / units.Week).toFixed(3)} Weeks Until Your Next Birthday
+There Are ${(ageInSeconds / units.Day).toFixed(3)} Days Until Your Next Birthday
+There Are ${(ageInSeconds / units.Hour).toFixed(3)} Hours Until Your Next Birthday
+There Are ${(ageInSeconds / units.Minute).toFixed(3)} Minutes Until Your Next Birthday
+There Are ${(ageInSeconds / units.Second).toFixed(3)} Seconds Until Your Next Birthday
+There Are ${(ageInSeconds / units.Millisecond).toFixed(3)} Milliseconds Until Your Next Birthday
+
+https://freddiethepebble.github.io/How-Old-Are-U/`;
+
+            const blob = new Blob([fileContent], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'How_Old_Are_U_Data.txt';
+            link.click();
         }
     </script>
 </body>
